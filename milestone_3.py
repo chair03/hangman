@@ -2,7 +2,6 @@ from typing import List
 import random
 import string
 
-from milestone_2 import check_guess
 
 class Hangman:
     def __init__(self,word_list:List[str],num_lives:int = 5) -> None:
@@ -12,7 +11,9 @@ class Hangman:
         self.num_lives = num_lives 
         self.word_list = word_list
         self.list_of_guesses = []
-    
+    '''
+    Checks the guess provided by the user is valid and if it ends the game by winning or losing
+    '''
     def check_guess(self,guess:str)->None:
         guess = guess.lower()
         if guess in self.word:
@@ -27,14 +28,34 @@ class Hangman:
             print(f"You have {self.num_lives} lives left.")
         self.list_of_guesses.append(guess)
     
-    
+    '''
+    Gets the guess from the user
+    '''
     def ask_for_input(self):
-        while(True):
-            guess = input("Enter a single character ")
-            if not(len(guess) == 1 and (guess in string.ascii_lowercase or guess in string.ascii_uppercase)):
-                print("Invalid letter. Please, enter a single alphabetical character.")
-            elif guess in self.list_of_guesses:
-                print( "You already tried that letter!")
-            else:
-                check_guess(guess)
-                self.list_of_guesses.append(guess)
+        guess = input("Enter a single character ")
+        if not(len(guess) == 1 and (guess in string.ascii_lowercase or guess in string.ascii_uppercase)):
+            print("Invalid letter. Please, enter a single alphabetical character.")
+        elif guess in self.list_of_guesses:
+            print( "You already tried that letter!")
+        else:
+            self.check_guess(guess)
+
+def play_game():
+    word_list = ['apple','orange','pear','rasberry','lime']
+    game = Hangman(word_list=word_list)
+    while True:
+        if game.num_lives == 0:
+            print('you lost!')
+            break
+        elif game.num_lives < 0:
+            raise ValueError('Number of lives cannot be negative')
+        elif game.num_lives > 0:
+            game.ask_for_input()
+        
+        if game.num_letters <= 0:
+            print("Congratulations! You won.")
+            break
+
+if __name__ == '__main__':         
+    play_game()
+
